@@ -1,39 +1,49 @@
 
 <template>
+    <div>
+        <a-button type="primary" @click="showModal" style="float: inline-end;">Add Task</a-button>
+        <a-modal v-model:open="open" title="Add Task" @ok="addTask">
+            <div>
+                <label for="">Title</label>
+                <a-input type="text" v-model:value="task.title"/>
+            </div>
+            <div>
+                <label for="">Description</label>
+                <a-input type="text" v-model:value="task.description"/>
+            </div>
+            <div>
+                <label for="">Due Date</label>
+                <a-input type="text" v-model:value="task.dueDate"/>
+            </div>
+            <div>
+                <label for="">Status</label>
+                <a-input type="text" v-model:value="task.status"/>
+            </div>
+            <div>
+                <label for="">User</label>
+                <a-input type="text" v-model:value="task.user"/>
+            </div>
+        </a-modal>
+    </div>
   <a-table :columns="columns" :data-source="tasks">
-    <template #headerCell="{ column }">
-      <template v-if="column.key === 'title'">
-        <span>
-        
-          Title
-        </span>
-      </template>
-    </template>
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'title'">
-        <a>
-          {{ record.name }}
-        </a>
+          {{ record.title }}
       </template>
       
       <template v-else-if="column.key === 'action'">
         <span>
-          <a>Invite 一 {{ record.name }}</a>
-          <a-divider type="vertical" />
-          <a>Delete</a>
-          <a-divider type="vertical" />
-          <a class="ant-dropdown-link">
-            More actions
-            <down-outlined />
-          </a>
+          
         </span>
       </template>
+      
     </template>
+
   </a-table>
 </template>
 
 <script setup>
-    const columns = [
+  const columns = [
   
   {
     title: 'Title',
@@ -67,12 +77,41 @@ import TaskService from '@/service/TaskService';
 import { onMounted,ref } from 'vue'
 
 const tasks = ref([]);
+const task = ref({
+    title: '',
+    description: '',
+    dueDate: '',
+    status:'',
+    userId: null
+});
+const open = ref(false);
 
 const getTasks = async () => {
 
     tasks.value = await TaskService.getTasks();
 
 }; 
+
+const addTask = async () => {
+ 
+    await TaskService.addTask(task.value);
+
+    task.value = {
+      title: '',
+      description: '',
+      dueDate: '',
+      status:'',
+      userId: null
+    }
+    open.value = false;
+
+    await getTasks();
+
+}
+
+const showModal = async () => {
+    open.value = true;
+}
 
 
 onMounted(async () => {
