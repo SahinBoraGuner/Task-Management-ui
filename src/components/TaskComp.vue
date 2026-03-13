@@ -35,7 +35,7 @@
                   v-model:value="task.userId"
                   show-search
                   allow-clear
-                  :options="options"
+                  :options="users"
                   :filter-option="filterOption"
                   style="width: 200px"
                 >
@@ -96,6 +96,7 @@ import { DatePicker } from 'ant-design-vue';
 import { onMounted, ref} from 'vue'
 
 const tasks = ref([]);
+const users = ref([]);
 const task = ref({
     title: '',
     description: '',
@@ -109,25 +110,23 @@ const filterOption = (input, option) => {
   return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
 }
 
-const options = ref([
-  {
-    label: 'Sahin',
-    value: '1'
-  },
-  {
-    label: 'SahinAdmin',
-    value: '2'
-    
-  }
-  
-]);
-
 
 const getTasks = async () => {
 
     tasks.value = await TaskService.getTasks();
 
 }; 
+
+const getUsers = async () => {
+
+    const userData = await TaskService.getUsers();
+    
+    users.value = userData.map(user => ({
+        label: user.name, 
+        value: user.id      
+    }));
+    
+}
 
 const addTask = async () => {
  
@@ -164,6 +163,10 @@ onMounted(async () => {
 
 await getTasks();
     console.log('gelen sonuc: ' + tasks.value.length);
+
+
+await getUsers();
+    console.log('gelen sonuc: ' + users.value.length);
 })
 </script>
 

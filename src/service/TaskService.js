@@ -7,6 +7,12 @@ class TaskService {
         return taskResponse;
     }
 
+    async getUsers() {
+        const userResponse = await fetch('/api/users/all')
+        .then(response => response.json())
+        return userResponse;
+    }
+
     async addTask(taskData) {
         await fetch('api/tasks/add', {
             method: "POST",
