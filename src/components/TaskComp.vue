@@ -36,7 +36,9 @@
                   show-search
                   allow-clear
                   :options="users"
-                  :filter-option="filterOption"
+                  :filter-option="false"
+                  @search="handleSearch"
+                  :field-names="{ label: 'name', value: 'id' }"
                   style="width: 200px"
                 >
                 </a-select>
@@ -106,10 +108,6 @@ const task = ref({
 });
 const open = ref(false);
 
-const filterOption = (input, option) => {
-  return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-}
-
 
 const getTasks = async () => {
 
@@ -119,12 +117,8 @@ const getTasks = async () => {
 
 const getUsers = async () => {
 
-    const userData = await TaskService.getUsers();
+    users.value = await TaskService.getUsers();
     
-    users.value = userData.map(user => ({
-        label: user.name, 
-        value: user.id      
-    }));
     
 }
 
@@ -155,6 +149,16 @@ const focus = () => {
 
 const handleChange = value => {
   console.log(`selected ${value}`);
+}
+
+const handleSearch = (val) => {
+
+    console.log("Aranan Değer:", val)
+    fetch(`/api/users/search?name=${val}`)
+    .then(res => res.json())
+    .then(data => {
+      users.value = data.slice(0, 5);
+    })
 }
 
 
