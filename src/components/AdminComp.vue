@@ -1,20 +1,32 @@
 <template>
     <a-modal v-model:open="open" title="Add Task To User" @ok="addUserTask">
         <div>
-            <label for="">Title</label>
+            <h4>Title</h4>
             <a-input type="text" v-model:value="task.title"/>
         </div>
         <div>
-            <label for="">Description</label>
+            <h4>Description</h4>
             <a-input type="text" v-model:value="task.description"/>
         </div>
         <div>
-            <label for="">Due Date</label>
+            <h4>Due Date</h4>
             <date-picker type="text"  v-model:value="task.dueDate"/>
         </div>
         <div>
-            <label for="">Status</label>
-            <a-input type="text" v-model:value="task.status"/>
+            <h4>Status</h4>
+            <a-select
+                ref="select"
+                v-model:value="task.status"
+                style="width: 200px"
+                @focus="focus"
+                @change="handleChange"
+            > 
+                <a-select-option value="READY">Ready</a-select-option>
+                <a-select-option value="PENDING">Pending</a-select-option>
+                <a-select-option value="CANCELLED">Cancelled</a-select-option>
+                <a-select-option value="IN_PROGRESS">in progress</a-select-option>
+                <a-select-option value="COMPLETED">Completed</a-select-option>
+            </a-select>
         </div>
         <div>
             <label for="">User</label>
@@ -40,60 +52,68 @@
 
 <script setup>
 
-import AdminService from '@/service/AdminService';
-import { DatePicker } from 'ant-design-vue';
-import { ref , onMounted } from 'vue';
+    import AdminService from '@/service/AdminService';
+    import { DatePicker } from 'ant-design-vue';
+    import { ref , onMounted } from 'vue';
 
-const users = ref([]);
-const open = ref(false);
-const task = ref({
-    title: '',
-    description: '',
-    dueDate: '',
-    status:'',
-    userId: null
-});
+    const users = ref([]);
+    const open = ref(false);
+    const task = ref({
+        title: '',
+        description: '',
+        dueDate: '',
+        status:'',
+        userId: null
+    });
 
-const columns = [
-  
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-  },
-];
+    const columns = [
+    
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: 'Action',
+        key: 'action',
+    },
+    ];
 
-const getUsers = async () => {
-    users.value = await AdminService.getUsers();
-}
-
-const addUserTask = async () => {
- 
-    await AdminService.addUserTask(task.value);
-
-    task.value = {
-      title: '',
-      description: '',
-      dueDate: '',
-      status:'',
-      userId: null
+    const getUsers = async () => {
+        users.value = await AdminService.getUsers();
     }
-    open.value = false;
 
-}
+    const addUserTask = async () => {
+    
+        await AdminService.addUserTask(task.value);
 
-const showModal = async () => {
-    open.value = true;
-}
+        task.value = {
+        title: '',
+        description: '',
+        dueDate: '',
+        status:'',
+        userId: null
+        }
+        open.value = false;
+
+    }
+
+    const showModal = async () => {
+        open.value = true;
+    }
+
+    const focus = () => {
+        console.log('focus');
+    }
+
+    const handleChange = value => {
+        console.log(`selected ${value}`);
+    }
 
 
-onMounted(async () => {
-    await getUsers();
-    console.log('gelen sonuc: ' + users.value.length)
-})
+    onMounted(async () => {
+        await getUsers();
+        console.log('gelen sonuc: ' + users.value.length)
+    })
 
 </script>

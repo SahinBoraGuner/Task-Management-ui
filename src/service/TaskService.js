@@ -30,6 +30,15 @@ class TaskService {
         })
         .then(response => response.json())
     }
+
+    async deleteTaskById(id) {
+        await fetch(`api/tasks/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json' 
+        }
+        })
+    }
         
 
 }

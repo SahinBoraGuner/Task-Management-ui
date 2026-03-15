@@ -45,133 +45,160 @@
             </div>
         </a-modal>
     </div>
-  <a-table :columns="columns" :data-source="tasks">
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.key === 'title'">
-          {{ record.title }}
+    <a-table :columns="columns" :data-source="tasks">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'title'">
+            {{ record.title }}
+        </template>
+        
+        <template v-else-if="column.key === 'action'">
+          <span>
+            
+            <a-popconfirm
+              title="Are you sure delete this task?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="deleteTaskById(record.id)"
+              @cancel="cancel"
+            >
+              <a-button type="primary" danger style="float: inline-start;">-</a-button>
+            </a-popconfirm>
+            
+          </span>
+        </template>
+        
       </template>
-      
-      <template v-else-if="column.key === 'action'">
-        <span>
-          
-        </span>
-      </template>
-      
-    </template>
 
-  </a-table>
+    </a-table>
+  
 </template>
 
 <script setup>
+
+  import TaskService from '@/service/TaskService';
+  import { DatePicker, message } from 'ant-design-vue';
+  import { onMounted, ref} from 'vue'
   const columns = [
   
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
-  },
-  {
-    title: 'Date',
-    key: 'dueDate',
-    dataIndex: 'dueDate',
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    dataIndex: 'status',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-  },
-];
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Date',
+      key: 'dueDate',
+      dataIndex: 'dueDate',
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+    },
+  ];
 
 
-
-import TaskService from '@/service/TaskService';
-import { DatePicker } from 'ant-design-vue';
-import { onMounted, ref} from 'vue'
-
-const tasks = ref([]);
-const users = ref([]);
-const task = ref({
-    title: '',
-    description: '',
-    dueDate: '',
-    status:'',
-    userId: null
-});
-const open = ref(false);
-
-
-const getTasks = async () => {
-
-    tasks.value = await TaskService.getTasks();
-
-}; 
-
-const getUsers = async () => {
-
-    users.value = await TaskService.getUsers();
-    
-    
-}
-
-const addTask = async () => {
- 
-    await TaskService.addTask(task.value);
-
-    task.value = {
+  const tasks = ref([]);
+  const users = ref([]);
+  const task = ref({
       title: '',
       description: '',
       dueDate: '',
       status:'',
       userId: null
+  });
+  const open = ref(false);
+
+
+  const getTasks = async () => {
+
+      tasks.value = await TaskService.getTasks();
+
+  }; 
+
+  const getUsers = async () => {
+
+      users.value = await TaskService.getUsers();
+      
+  }
+
+  const addTask = async () => {
+      try {
+      await TaskService.addTask(task.value);
+      message.success('Added Task Successfully');
+
+      task.value = {
+        title: '',
+        description: '',
+        dueDate: '',
+        status:'',
+        userId: null
+      }
+      
+      open.value = false;
+
+      await getTasks();
+    } catch (error) {
+      console.error("somethings wrong:", error);
+      message.error('Something goes wrong');
     }
-    open.value = false;
 
+  }
+
+  const deleteTaskById = async (id) => {
+    try {
+    await TaskService.deleteTaskById(id);
+    message.success('Task Deleted Successfully');
     await getTasks();
+    } catch (error) {
+      console.error("Somethings wrong:", error);
+      message.error('Something goes wrong');
+    }
+    
+  }
 
-}
+  const showModal = async () => {
+      open.value = true;
+  }
 
-const showModal = async () => {
-    open.value = true;
-}
+  const focus = () => {
+    console.log('focus');
+  }
 
-const focus = () => {
-  console.log('focus');
-}
+  const handleChange = value => {
+    console.log(`selected ${value}`);
+  }
 
-const handleChange = value => {
-  console.log(`selected ${value}`);
-}
+  const handleSearch = (val) => {
 
-const handleSearch = (val) => {
-
-    console.log("Aranan Değer:", val)
-    fetch(`/api/users/search?name=${val}`)
-    .then(res => res.json())
-    .then(data => {
-      users.value = data.slice(0, 5);
-    })
-}
-
-
-
-onMounted(async () => {
-
-await getTasks();
-    console.log('gelen sonuc: ' + tasks.value.length);
+      console.log("Aranan Değer:", val)
+      fetch(`/api/users/search?name=${val}`)
+      .then(res => res.json())
+      .then(data => {
+        users.value = data.slice(0, 5);
+      })
+  }
 
 
-await getUsers();
-    console.log('gelen sonuc: ' + users.value.length);
-})
+
+  onMounted(async () => {
+
+  await getTasks();
+      console.log('gelen sonuc: ' + tasks.value.length);
+
+
+  await getUsers();
+      console.log('gelen sonuc: ' + users.value.length);
+  })
 </script>
 
 
