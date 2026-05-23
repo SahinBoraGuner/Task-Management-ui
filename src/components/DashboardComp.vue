@@ -4,20 +4,20 @@
     <div class="welcome-banner">
       <div class="banner-content">
         <div class="banner-text">
-          <h2>Çalışma Alanınıza Hoş Geldiniz! <span class="wave">👋</span></h2>
+          <h2>Welcome to Your Workspace! <span class="wave">👋</span></h2>
           <p>
-            Bugünkü hedeflerinizi tamamlamaya hazır mısınız? Aşağıdaki panelden tüm görevlerinizin güncel durumunu gerçek zamanlı izleyebilirsiniz.
+            Ready to accomplish today's goals? Track the real-time status of all your tasks from the panel below.
           </p>
           <div class="banner-badge">
             <span class="badge-dot"></span>
-            Genel Tamamlanma Oranı: <strong>%{{ completionRate }}</strong>
+            Overall Completion Rate: <strong>{{ completionRate }}%</strong>
           </div>
         </div>
         <div class="banner-gauge-container">
           <div class="banner-progress-wrapper">
             <div class="banner-progress-bar" :style="{ width: completionRate + '%' }"></div>
           </div>
-          <span class="banner-progress-label">%{{ completionRate }} Bitti</span>
+          <span class="banner-progress-label">{{ completionRate }}% Complete</span>
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@
           <template #title>
             <div class="card-header-title">
               <span class="header-icon">📊</span>
-              <h4>Görev Dağılım Analizi</h4>
+              <h4>Task Distribution Analysis</h4>
             </div>
           </template>
           <div class="chart-content">
@@ -97,7 +97,7 @@
               <!-- Center Text inside Ring -->
               <div class="gauge-center-text">
                 <span class="percent-num">{{ completionRate }}%</span>
-                <span class="percent-label">Başarı</span>
+                <span class="percent-label">Success</span>
               </div>
             </div>
 
@@ -128,12 +128,12 @@
           <template #title>
             <div class="card-header-title">
               <span class="header-icon">⚡</span>
-              <h4>Aktif Görevler (Özet)</h4>
+              <h4>Active Tasks (Summary)</h4>
             </div>
           </template>
           <template #extra>
             <a-button type="link" class="view-all-btn" @click="navigateToTasks">
-              Tümünü Gör <ArrowRightOutlined />
+              View All <ArrowRightOutlined />
             </a-button>
           </template>
 
@@ -151,11 +151,11 @@
                     {{ getStatusTranslation(task.status) }}
                   </a-tag>
                 </div>
-                <p class="task-preview-desc">{{ task.description || 'Açıklama belirtilmemiş.' }}</p>
+                <p class="task-preview-desc">{{ task.description || 'No description provided.' }}</p>
                 <div class="task-preview-meta">
                   <span class="task-meta-item">
                     <CalendarOutlined class="meta-icon" />
-                    {{ task.dueDate ? formatDate(task.dueDate) : 'Tarih Belirtilmemiş' }}
+                    {{ task.dueDate ? formatDate(task.dueDate) : 'No Due Date' }}
                   </span>
                 </div>
               </div>
@@ -171,10 +171,10 @@
               <div class="empty-icon-wrapper">
                 <SmileOutlined class="empty-icon" />
               </div>
-              <h4>Harika! Aktif Göreviniz Kalmadı</h4>
-              <p>Tüm hedeflerinize ulaştınız. Yeni bir görev eklemek ister misiniz?</p>
+              <h4>Great! No Active Tasks Remaining</h4>
+              <p>You've reached all your goals. Would you like to create a new task?</p>
               <a-button type="primary" class="create-task-btn" @click="navigateToTasks">
-                Görev Oluştur
+                Create Task
               </a-button>
             </div>
           </div>
@@ -243,14 +243,14 @@ const navigateToTasks = () => {
   router.push('/tasks');
 };
 
-// Map status key to Turkish translation
+// Map status key to English label
 const getStatusTranslation = (status) => {
   const translations = {
-    READY: 'Hazır',
-    PENDING: 'Beklemede',
-    IN_PROGRESS: 'Devam Ediyor',
-    COMPLETED: 'Tamamlandı',
-    CANCELLED: 'İptal Edildi'
+    READY: 'Ready',
+    PENDING: 'Pending',
+    IN_PROGRESS: 'In Progress',
+    COMPLETED: 'Completed',
+    CANCELLED: 'Cancelled'
   };
   return translations[status] || status;
 };
@@ -279,11 +279,11 @@ const getStatusBorderClass = (status) => {
   return borders[status] || 'border-default';
 };
 
-// Format ISO date to Turkish date format
+// Format ISO date to locale date format
 const formatDate = (dateStr) => {
-  return new Date(dateStr).toLocaleDateString('tr-TR', { 
+  return new Date(dateStr).toLocaleDateString('en-US', { 
     day: '2-digit', 
-    month: '2-digit', 
+    month: 'short', 
     year: 'numeric' 
   });
 };
@@ -306,33 +306,33 @@ const statCards = computed(() => {
   const total = totalTasks.value || 1; // Avoid division by zero
   return [
     { 
-      title: 'Toplam Görev', 
+      title: 'Total Tasks', 
       value: totalTasks.value, 
-      subtext: 'Projedeki tüm görevler',
+      subtext: 'All tasks in the project',
       colorClass: 'card-total',
       icon: FileTextOutlined,
       percentage: 100
     },
     { 
-      title: 'Devam Edenler', 
+      title: 'In Progress', 
       value: inProgressTasks.value, 
-      subtext: 'Şu an çalışılanlar',
+      subtext: 'Currently being worked on',
       colorClass: 'card-progress-active',
       icon: SyncOutlined,
       percentage: Math.round((inProgressTasks.value / total) * 100)
     },
     { 
-      title: 'Tamamlananlar', 
+      title: 'Completed', 
       value: completedTasks.value, 
-      subtext: 'Başarıyla bitirilenler',
+      subtext: 'Successfully finished',
       colorClass: 'card-completed',
       icon: CheckCircleOutlined,
       percentage: Math.round((completedTasks.value / total) * 100)
     },
     { 
-      title: 'Bekleyenler', 
+      title: 'Pending', 
       value: pendingTasks.value, 
-      subtext: 'Sırada bekleyenler',
+      subtext: 'Waiting in the queue',
       colorClass: 'card-pending',
       icon: ClockCircleOutlined,
       percentage: Math.round((pendingTasks.value / total) * 100)
@@ -344,10 +344,10 @@ const statCards = computed(() => {
 const legendItems = computed(() => {
   const total = totalTasks.value || 1;
   return [
-    { label: 'Tamamlandı', count: completedTasks.value, percentage: Math.round((completedTasks.value / total) * 100), color: '#10b981' },
-    { label: 'Devam Ediyor', count: inProgressTasks.value, percentage: Math.round((inProgressTasks.value / total) * 100), color: '#a855f7' },
-    { label: 'Hazır / Beklemede', count: pendingTasks.value, percentage: Math.round((pendingTasks.value / total) * 100), color: '#eab308' },
-    { label: 'İptal Edildi', count: cancelledTasks.value, percentage: Math.round((cancelledTasks.value / total) * 100), color: '#ef4444' },
+    { label: 'Completed', count: completedTasks.value, percentage: Math.round((completedTasks.value / total) * 100), color: '#10b981' },
+    { label: 'In Progress', count: inProgressTasks.value, percentage: Math.round((inProgressTasks.value / total) * 100), color: '#a855f7' },
+    { label: 'Ready / Pending', count: pendingTasks.value, percentage: Math.round((pendingTasks.value / total) * 100), color: '#eab308' },
+    { label: 'Cancelled', count: cancelledTasks.value, percentage: Math.round((cancelledTasks.value / total) * 100), color: '#ef4444' },
   ];
 });
 

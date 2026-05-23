@@ -1,6 +1,69 @@
-Dashboard Overview
-<img width="1892" height="919" alt="task management dashboard" src="https://github.com/user-attachments/assets/a44c7152-09e1-4368-a0d9-1786adb966ab" />
+# 📋 Task Management Workspace
 
-Task List
-<img width="1891" height="920" alt="task management list" src="https://github.com/user-attachments/assets/3bc47796-6bb4-465d-b420-43b830256025" />
+A modern task management application built with **Vue 3** and **Ant Design Vue**. Manage your tasks efficiently with a beautiful dashboard, task list, and admin panel.
 
+## 🚀 Tech Stack
+
+- **Frontend:** Vue 3
+- **UI Library:** Ant Design Vue 4
+- **Router:** Vue Router 4
+- **HTTP Client:** Axios
+- **Build Tool:** Vue CLI 5
+
+## 📸 Screenshots
+
+### Dashboard Overview
+The dashboard provides a comprehensive overview of all tasks with statistics, task distribution analysis, and active task summaries.
+
+<img width="1892" alt="Dashboard Overview" src="screenshots/dashboard-overview.png" />
+
+### Tasks Management
+Full task management with search, filtering, status tracking (Ready, Pending, Completed, In Progress), and CRUD operations.
+
+<img width="1892" alt="Tasks Management" src="screenshots/tasks-management.png" />
+
+### Admin Dashboard
+Admin panel for user management with role-based access control.
+
+<img width="1892" alt="Admin Dashboard" src="screenshots/admin-dashboard.png" />
+
+## ✨ Features
+
+- 📊 **Dashboard** - Real-time task statistics and completion rates
+- 📝 **Task Management** - Create, edit, delete, and search tasks
+- 👥 **Admin Panel** - User management with role-based access
+- 🔍 **Search & Filter** - Search tasks by title or description
+- 📄 **Pagination** - Paginated lists for better performance
+- 🎨 **Modern UI** - Clean and responsive design with Ant Design Vue
+
+## 📦 Project Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run serve
+
+# Build for production
+npm run build
+
+# Lint files
+npm run lint
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── components/          # Vue components
+│   ├── DashboardComp.vue    # Dashboard with statistics
+│   ├── TaskListComp.vue     # Task list with CRUD
+│   └── AdminDashboard.vue   # Admin user management
+├── service/             # API services
+│   ├── TaskService.js       # Task API calls
+│   └── AdminService.js      # Admin API calls
+├── router/              # Vue Router configuration
+├── App.vue              # Main application component
+└── main.js              # Application entry point
+```

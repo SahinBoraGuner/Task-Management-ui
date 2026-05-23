@@ -4,7 +4,7 @@
       <div class="table-action-bar">
         <a-input-search
           v-model:value="searchQuery"
-          placeholder="Başlık veya açıklama ara..."
+          placeholder="Search by title or description..."
           enter-button
           allow-clear
           @search="handleTaskSearch"
