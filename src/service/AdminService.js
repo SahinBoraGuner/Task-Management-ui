@@ -9,7 +9,7 @@ class AdminService {
     }
 
     async addUserTask(taskData) {
-        await fetch('api/admin/add', {
+        await fetch('/api/admin/add', {
             method: "POST",
             headers: {
             'Content-Type': 'application/json' 

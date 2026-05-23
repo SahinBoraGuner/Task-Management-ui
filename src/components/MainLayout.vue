@@ -8,15 +8,15 @@
       <hr />
       <a-menu mode="inline" :selected-keys="[activePage]" @click="handleMenuClick">
         <a-menu-item key="dashboard">
-          <template #icon>📊</template>
+          <template #icon><dashboard-outlined /></template>
           <span>Dashboard</span>
         </a-menu-item>
         <a-menu-item key="tasks">
-          <template #icon>📝</template>
+          <template #icon><project-outlined /></template>
           <span>Tasks</span>
         </a-menu-item>
         <a-menu-item key="admin-page">
-          <template #icon>⚙️</template>
+          <template #icon><setting-outlined /></template>
           <span>Admin Page</span>
         </a-menu-item>
       </a-menu>
@@ -39,6 +39,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { DashboardOutlined, ProjectOutlined, SettingOutlined } from '@ant-design/icons-vue';
 
 const route = useRoute();
 const router = useRouter();

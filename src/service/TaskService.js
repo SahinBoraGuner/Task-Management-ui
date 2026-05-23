@@ -14,7 +14,7 @@ class TaskService {
     }
 
     async addTask(taskData) {
-        await fetch('api/tasks/add', {
+        await fetch('/api/tasks/add', {
             method: "POST",
             headers: {
             'Content-Type': 'application/json' 
@@ -32,7 +32,7 @@ class TaskService {
     }
 
     async deleteTaskById(id) {
-        await fetch(`api/tasks/delete/${id}`, {
+        await fetch(`/api/tasks/delete/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json' 
