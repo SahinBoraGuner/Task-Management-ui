@@ -156,7 +156,11 @@ const getTasks = async () => {
 
 const getUsers = async () => {
   try {
-    users.value = await TaskService.getUsers();
+    const rawUsers = await TaskService.getUsers();
+    users.value = rawUsers.map(user => ({
+      ...user,
+      name: user.email ? `${user.name} (${user.email})` : user.name
+    }));
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -204,7 +208,10 @@ const handleUserSearch = (val) => {
     fetch(`/api/users/search?name=${val}`)
       .then(res => res.json())
       .then(data => {
-        users.value = data.slice(0, 5);
+        users.value = data.slice(0, 5).map(user => ({
+          ...user,
+          name: user.email ? `${user.name} (${user.email})` : user.name
+        }));
       })
       .catch(err => console.error('User search error:', err));
   }, 300);
