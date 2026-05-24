@@ -67,3 +67,4 @@ src/
 ├── App.vue              # Main application component
 └── main.js              # Application entry point
 ```
+ 
